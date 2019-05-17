@@ -1,3 +1,7 @@
 *.dSYM
 .vscode
 cvm
+generated
+*.asm
+node_modules
+grammar.js
