@@ -1,0 +1,26 @@
+; // Codice macchina
+35 ; numero linee
+
+12 ; MOV
+0
+2
+12 ; MOV
+1
+3
+30 ; ADD 0 1
+0
+1
+
+23 ; JZ end
+18
+
+30 ; ADD 0 1
+0
+1
+11 ; POP 2
+2
+1 ; PRINT 2
+2
+
+; end
+0 ; HALT
