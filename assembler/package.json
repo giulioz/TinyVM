@@ -1,0 +1,13 @@
+{
+  "name": "assembler",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "nearley": "^2.16.0"
+  },
+  "scripts": {
+    "start": "node assembler.js",
+    "build-grammar": "nearleyc grammar.ne -o grammar.js"
+  }
+}

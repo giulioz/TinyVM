@@ -1,0 +1,172 @@
+[
+  [
+    {
+      "type": "int",
+      "ident": "fattoriale",
+      "params": [
+        {
+          "type": "int",
+          "ident": "n"
+        }
+      ],
+      "body": {
+        "variables": [
+          {
+            "type": "int",
+            "ident": "i",
+            "init": []
+          },
+          {
+            "type": "int",
+            "ident": "risultato",
+            "init": {
+              "etype": "value",
+              "value": {
+                "type": "int",
+                "value": 1
+              }
+            }
+          }
+        ],
+        "statements": [
+          {
+            "stype": "for",
+            "init": {
+              "ident": "i",
+              "value": {
+                "etype": "value",
+                "value": {
+                  "type": "int",
+                  "value": 2
+                }
+              }
+            },
+            "condition": {
+              "left": {
+                "etype": "ident",
+                "value": "i"
+              },
+              "right": {
+                "etype": "ident",
+                "value": "n"
+              },
+              "cmp": "<"
+            },
+            "increment": {
+              "ident": "i",
+              "value": {
+                "etype": "op",
+                "op": "+",
+                "left": {
+                  "etype": "ident",
+                  "value": "i"
+                },
+                "right": {
+                  "etype": "value",
+                  "value": {
+                    "type": "int",
+                    "value": 1
+                  }
+                }
+              }
+            },
+            "body": {
+              "statements": [
+                {
+                  "stype": "assign",
+                  "ident": "risultato",
+                  "value": {
+                    "etype": "op",
+                    "op": "*",
+                    "left": {
+                      "etype": "ident",
+                      "value": "risultato"
+                    },
+                    "right": {
+                      "etype": "ident",
+                      "value": "i"
+                    }
+                  }
+                }
+              ]
+            },
+            "elseBody": ")"
+          },
+          {
+            "stype": "assign",
+            "ident": "risultato",
+            "value": {
+              "etype": "op",
+              "op": "*",
+              "left": {
+                "etype": "ident",
+                "value": "risultato"
+              },
+              "right": {
+                "etype": "ident",
+                "value": "i"
+              }
+            }
+          },
+          {
+            "stype": "return",
+            "value": {
+              "etype": "ident",
+              "value": "risultato"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "int",
+      "ident": "main",
+      "body": {
+        "variables": [
+          {
+            "type": "int",
+            "ident": "r",
+            "init": {
+              "etype": "call",
+              "name": "fattoriale",
+              "params": [
+                {
+                  "etype": "value",
+                  "value": {
+                    "type": "int",
+                    "value": 5
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "statements": [
+          {
+            "stype": "expr",
+            "value": {
+              "etype": "call",
+              "name": "print",
+              "params": [
+                {
+                  "etype": "ident",
+                  "value": "r"
+                }
+              ]
+            }
+          },
+          {
+            "stype": "return",
+            "value": {
+              "etype": "value",
+              "value": {
+                "type": "int",
+                "value": 0
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+]
