@@ -58,8 +58,7 @@ int readFileLine(FILE *file, numberType *output) {
 }
 
 numberType *readProgram(FILE *file, numberType *outSize) {
-  numberType programLineCount = 0;
-  if (!readFileLine(file, &programLineCount)) {
+  if (!readFileLine(file, outSize)) {
     return 0;
   }
 
@@ -79,118 +78,121 @@ int main(int argc, const char **argv) {
   numberType programLineCount = 0;
   numberType *program = readProgram(readingFile, &programLineCount);
 
-  numberType stack[STACKSIZE] = {0};
-  numberType registers[NREGISTERS] = {0};
-  unsigned int stackPointer = 0;
-  unsigned int programCounter = 0;
-  int running = TRUE;
+  printf("section .bss\n");
+  printf("registers: resb 128\n\n");
 
-  while (running) {
+  printf("section .text\n");
+  printf("start:\n");
+
+  int programCounter = 0;
+  while (programCounter < programLineCount) {
     numberType opcode = program[programCounter];
     numberType p1 = program[programCounter + 1];
     numberType p2 = program[programCounter + 2];
 
+    printf("l%d:\n", programCounter);
+
     switch (opcode) {
       case HALT:
-        running = FALSE;
+        printf("ret\n");
+        programCounter += 1;
         break;
 
       case DISPLAY:
-        printf("PRINT: %d\n", registers[p1]);
+        // printf("PRINT %d: %d\n", p1, registers[p1]);
         programCounter += 2;
         break;
 
       case PRINT_STACK:
-        printf("STACK:\n");
-        for (int i = 0; i < p1; i++) {
-          printf("  [%d]: %d\n", i, stack[stackPointer - i]);
-        }
+        // printf("STACK:\n");
+        // for (int i = 0; i < p1; i++) {
+        //   printf("  [%d]: %d\n", i, stack[stackPointer - i]);
+        // }
         programCounter += 2;
         break;
 
       case PUSH:
-        stack[stackPointer] = registers[p1];
-        stackPointer++;
+        printf("mov eax, dword [registers+%d]\n", p1 * NBYTES);
+        printf("push eax\n");
         programCounter += 2;
         break;
 
       case POP:
-        stackPointer--;
-        registers[p1] = stack[stackPointer];
+        printf("pop eax\n");
+        printf("mov dword [registers+%d], eax\n", p1 * NBYTES);
         programCounter += 2;
         break;
 
       case MOV:
-        registers[p1] = p2;
+        printf("mov dword [registers+%d], %d\n", p1 * NBYTES, p2);
         programCounter += 3;
         break;
 
       case CALL:
-        stack[stackPointer] = programCounter + 2;
-        stackPointer++;
-        programCounter = p1;
+        printf("call l%d\n", 0);
+        programCounter += 2;
         break;
 
       case RET:
-        stackPointer--;
-        programCounter = stack[stackPointer];
+        printf("ret\n");
+        programCounter += 1;
         break;
 
       case JMP:
-        programCounter = p1;
+        printf("jmp l%d\n", p1);
+        programCounter += 2;
         break;
 
       case JZ:
-        stackPointer--;
-        p2 = stack[stackPointer];
-        if (p2 == 0) {
-          programCounter = p1;
-        } else {
-          programCounter += 2;
-        }
+        printf("pop eax\n");
+        printf("cmp eax, 0\n");
+        printf("je l%d\n", p1);
+        programCounter += 2;
         break;
 
       case JPOS:
-        stackPointer--;
-        p2 = stack[stackPointer];
-        if (p2 > 0) {
-          programCounter = p1;
-        } else {
-          programCounter += 2;
-        }
+        printf("pop eax\n");
+        printf("cmp eax, 0\n");
+        printf("jg l%d\n", p1);
+        programCounter += 2;
         break;
 
       case JNEG:
-        stackPointer--;
-        p2 = stack[stackPointer];
-        if (p2 < 0) {
-          programCounter = p1;
-        } else {
-          programCounter += 2;
-        }
+        printf("pop eax\n");
+        printf("cmp eax, 0\n");
+        printf("jl l%d\n", p1);
+        programCounter += 2;
         break;
 
       case ADD:
-        stack[stackPointer] = registers[p1] + registers[p2];
-        stackPointer++;
+        printf("mov eax, dword [registers+%d]\n", p1 * NBYTES);
+        printf("mov ebx, dword [registers+%d]\n", p2 * NBYTES);
+        printf("add eax, ebx\n");
+        printf("push eax\n");
         programCounter += 3;
         break;
 
       case SUB:
-        stack[stackPointer] = registers[p1] - registers[p2];
-        stackPointer++;
+        printf("mov eax, dword [registers+%d]\n", p1 * NBYTES);
+        printf("mov ebx, dword [registers+%d]\n", p2 * NBYTES);
+        printf("sub eax, ebx\n");
+        printf("push eax\n");
         programCounter += 3;
         break;
 
       case MUL:
-        stack[stackPointer] = registers[p1] * registers[p2];
-        stackPointer++;
+        printf("mov eax, dword [registers+%d]\n", p1 * NBYTES);
+        printf("mov ebx, dword [registers+%d]\n", p2 * NBYTES);
+        printf("imul eax, ebx\n");
+        printf("push eax\n");
         programCounter += 3;
         break;
 
       case DIV:
-        stack[stackPointer] = registers[p1] / registers[p2];
-        stackPointer++;
+        printf("mov eax, dword [registers+%d]\n", p1 * NBYTES);
+        printf("mov ebx, dword [registers+%d]\n", p2 * NBYTES);
+        printf("idiv eax, ebx\n");
+        printf("push eax\n");
         programCounter += 3;
         break;
 
