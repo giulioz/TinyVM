@@ -62,7 +62,7 @@ numberType *readProgram(FILE *file, numberType *outSize) {
     return 0;
   }
 
-  numberType *lines = calloc(NBYTES + 3, sizeof(numberType));
+  numberType *lines = calloc(outSize + 3, sizeof(numberType));
   numberType *linePointer = lines;
   numberType temp;
   while (readFileLine(file, &temp)) {
