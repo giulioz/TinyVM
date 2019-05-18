@@ -98,5 +98,5 @@ module.exports = function assemble(code) {
     };
   }
 
-  return bytecode.code.join("\n");
+  return `${bytecode.index} ; length\n\n` + bytecode.code.join("\n");
 };
