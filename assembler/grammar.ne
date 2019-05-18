@@ -23,11 +23,11 @@ op -> "HALT"                {% d => ({op: d[0]}) %}
 	| "JZ" __ ident         {% d => ({op: d[0], label: d[2]}) %}
 	| "JPOS" __ ident       {% d => ({op: d[0], label: d[2]}) %}
 	| "JNEG" __ ident       {% d => ({op: d[0], label: d[2]}) %}
-	| "ADD" __ reg __ reg   {% d => ({op: d[0], regA: d[2], regB: d[2]}) %}
-	| "SUB" __ reg __ reg   {% d => ({op: d[0], regA: d[2], regB: d[2]}) %}
-	| "MUL" __ reg __ reg   {% d => ({op: d[0], regA: d[2], regB: d[2]}) %}
-	| "DIV" __ reg __ reg   {% d => ({op: d[0], regA: d[2], regB: d[2]}) %}
-	
+	| "ADD" __ reg __ reg   {% d => ({op: d[0], regA: d[2], regB: d[4]}) %}
+	| "SUB" __ reg __ reg   {% d => ({op: d[0], regA: d[2], regB: d[4]}) %}
+	| "MUL" __ reg __ reg   {% d => ({op: d[0], regA: d[2], regB: d[4]}) %}
+	| "DIV" __ reg __ reg   {% d => ({op: d[0], regA: d[2], regB: d[4]}) %}
+
 label -> ident ":"          {% d => ({op: "LABEL", name: d[0]}) %}
 
 number -> int                          {% d => parseInt(d[0]) %}
