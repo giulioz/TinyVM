@@ -8,3 +8,4 @@ grammar.js
 yarn-error.log
 .DS_Store
 .cache
+dist

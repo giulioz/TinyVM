@@ -14,8 +14,8 @@
     "react-monaco-editor": "^0.25.1"
   },
   "scripts": {
-    "web": "parcel web.html",
-    "web-build": "parcel build web.html",
+    "web": "parcel --public-url '.' web.html",
+    "web-build": "parcel build --public-url '.' web.html",
     "start": "node cli.js",
     "build-grammar": "nearleyc grammar.ne -o grammar.js"
   }

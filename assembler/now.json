@@ -1,0 +1,5 @@
+{
+  "version": 2,
+  "name": "assembler",
+  "builds": [{ "src": "./dist/web.*", "use": "@now/static" }]
+}
