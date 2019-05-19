@@ -82,7 +82,10 @@ int main(int argc, const char **argv) {
   printf("registers: resb 128\n\n");
 
   printf("section .text\n");
-  printf("start:\n");
+  printf("extern _printVal\n");
+  printf("default rel\n");
+  printf("global _CVMstart\n");
+  printf("_CVMstart:\n");
 
   int programCounter = 0;
   while (programCounter < programLineCount) {
@@ -99,7 +102,14 @@ int main(int argc, const char **argv) {
         break;
 
       case DISPLAY:
-        // printf("PRINT %d: %d\n", p1, registers[p1]);
+        printf("lea rdx, [registers+%d]\n", p1 * NBYTES);
+        printf("mov rdi, [rdx]\n");
+
+        printf("push rsp\n");
+        printf("add rsp, 16\n");
+        printf("and rsp, -16\n");
+        printf("call _printVal\n");
+        printf("pop rsp\n");
         programCounter += 2;
         break;
 
@@ -112,24 +122,28 @@ int main(int argc, const char **argv) {
         break;
 
       case PUSH:
-        printf("mov eax, dword [registers+%d]\n", p1 * NBYTES);
-        printf("push eax\n");
+        printf("lea rdx, [registers+%d]\n", p1 * NBYTES);
+        printf("mov rax, dword [rdx]\n");
+        printf("push rax\n");
         programCounter += 2;
         break;
 
       case POP:
-        printf("pop eax\n");
-        printf("mov dword [registers+%d], eax\n", p1 * NBYTES);
+        printf("pop rax\n");
+        printf("lea rdx, [registers+%d]\n", p1 * NBYTES);
+        printf("mov [rdx], rax\n");
+
         programCounter += 2;
         break;
 
       case MOV:
-        printf("mov dword [registers+%d], %d\n", p1 * NBYTES, p2);
+        printf("lea rdx, [registers+%d]\n", p1 * NBYTES);
+        printf("mov dword [rdx], %d\n", p2);
         programCounter += 3;
         break;
 
       case CALL:
-        printf("call l%d\n", 0);
+        printf("call l%d\n", p1);
         programCounter += 2;
         break;
 
@@ -144,55 +158,63 @@ int main(int argc, const char **argv) {
         break;
 
       case JZ:
-        printf("pop eax\n");
+        printf("pop rax\n");
         printf("cmp eax, 0\n");
         printf("je l%d\n", p1);
         programCounter += 2;
         break;
 
       case JPOS:
-        printf("pop eax\n");
+        printf("pop rax\n");
         printf("cmp eax, 0\n");
         printf("jg l%d\n", p1);
         programCounter += 2;
         break;
 
       case JNEG:
-        printf("pop eax\n");
+        printf("pop rax\n");
         printf("cmp eax, 0\n");
         printf("jl l%d\n", p1);
         programCounter += 2;
         break;
 
       case ADD:
-        printf("mov eax, dword [registers+%d]\n", p1 * NBYTES);
-        printf("mov ebx, dword [registers+%d]\n", p2 * NBYTES);
+        printf("lea rdx, [registers+%d]\n", p1 * NBYTES);
+        printf("mov eax, dword [rdx]\n");
+        printf("lea rdx, [registers+%d]\n", p2 * NBYTES);
+        printf("mov ebx, [rdx]\n");
         printf("add eax, ebx\n");
-        printf("push eax\n");
+        printf("push rax\n");
         programCounter += 3;
         break;
 
       case SUB:
-        printf("mov eax, dword [registers+%d]\n", p1 * NBYTES);
-        printf("mov ebx, dword [registers+%d]\n", p2 * NBYTES);
+        printf("lea rdx, [registers+%d]\n", p1 * NBYTES);
+        printf("mov eax, dword [rdx]\n");
+        printf("lea rdx, [registers+%d]\n", p2 * NBYTES);
+        printf("mov ebx, [rdx]\n");
         printf("sub eax, ebx\n");
-        printf("push eax\n");
+        printf("push rax\n");
         programCounter += 3;
         break;
 
       case MUL:
-        printf("mov eax, dword [registers+%d]\n", p1 * NBYTES);
-        printf("mov ebx, dword [registers+%d]\n", p2 * NBYTES);
+        printf("lea rdx, [registers+%d]\n", p1 * NBYTES);
+        printf("mov eax, dword [rdx]\n");
+        printf("lea rdx, [registers+%d]\n", p2 * NBYTES);
+        printf("mov ebx, [rdx]\n");
         printf("imul eax, ebx\n");
-        printf("push eax\n");
+        printf("push rax\n");
         programCounter += 3;
         break;
 
       case DIV:
-        printf("mov eax, dword [registers+%d]\n", p1 * NBYTES);
-        printf("mov ebx, dword [registers+%d]\n", p2 * NBYTES);
+        printf("lea rdx, [registers+%d]\n", p1 * NBYTES);
+        printf("mov eax, dword [rdx]\n");
+        printf("lea rdx, [registers+%d]\n", p2 * NBYTES);
+        printf("mov ebx, [rdx]\n");
         printf("idiv eax, ebx\n");
-        printf("push eax\n");
+        printf("push rax\n");
         programCounter += 3;
         break;
 

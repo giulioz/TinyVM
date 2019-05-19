@@ -1,7 +1,7 @@
 *.dSYM
 .vscode
 cvm
-generated
+generated.*
 *.asm
 node_modules
 grammar.js
@@ -9,3 +9,5 @@ yarn-error.log
 .DS_Store
 .cache
 dist
+a.out
+*.o

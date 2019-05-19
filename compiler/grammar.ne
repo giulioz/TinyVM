@@ -7,18 +7,18 @@
 file -> (function _):*                                       {% d => d[0].map(e => e[0]) %}
 
 function -> type __ ident _ "(" (params | null) ")" _ "{" _ body "}"
-      {% d => ({type: d[0], ident: d[2], params: d[5][0], body: d[10]}) %}
+      {% d => ({type: "function", rtype: d[0], ident: d[2], params: d[5][0], body: d[10]}) %}
 
 type -> "void"                                               {% nth(0) %}
       | "int"                                                {% nth(0) %}
 ident -> [a-z,A-Z] [a-z,A-Z,0-9]:*                           {% d => d[0] + merge(d[1]) %}
-params -> type __ ident                                      {% d => [{type: d[0], ident: d[2]}] %}
-		| type __ ident _ "," _ params                       {% d => [{type: d[0], ident: d[2]}, ...d[6]] %}
+params -> type __ ident                                      {% d => [{type: "param", vtype: d[0], ident: d[2]}] %}
+		| type __ ident _ "," _ params                       {% d => [{type: "param", vtype: d[0], ident: d[2]}, ...d[6]] %}
 body -> null                                                 {% nth(0) %}
       | statements                                           {% d => ({statements: d[0]}) %}
       | vardecl _ statements                                 {% d => ({variables: d[0], statements: d[2]}) %}
-vardecl -> type __ ident _ assign ";"                        {% d => [{type: d[0], ident: d[2], init: d[4]}] %}
-         | type __ ident _ assign ";" _ vardecl              {% d => [{type: d[0], ident: d[2], init: d[4]}, ...d[7]] %}
+vardecl -> type __ ident _ assign ";"                        {% d => [{vtype: d[0], ident: d[2], init: d[4]}] %}
+         | type __ ident _ assign ";" _ vardecl              {% d => [{vtype: d[0], ident: d[2], init: d[4]}, ...d[7]] %}
 assign -> null
         | "=" _ expr _                                       {% nth(2) %}
 statements -> statement:*                                    {% nth(0) %}
@@ -52,11 +52,13 @@ op -> "+"                              {% nth(0) %}
 cmp -> "=="                            {% nth(0) %}
      | ">"                             {% nth(0) %}
 	 | "<"                             {% nth(0) %}
+	 | "<="                            {% nth(0) %}
+	 | ">="                            {% nth(0) %}
 
 fparams -> expr                                              {% d => [d[0]] %}
 		 | expr _ "," _ fparams                              {% d => [d[0], ...d[4]] %}
 
-value -> int                                                 {% d => ({type: "int", value: parseFloat(d[0])}) %}
+value -> int                                                 {% d => ({vtype: "int", value: parseFloat(d[0])}) %}
 
 int -> digit                           {% id %}
      | digit19 digits                  {% merge %}

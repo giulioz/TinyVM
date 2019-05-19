@@ -1,8 +1,8 @@
 ; // Codice macchina
 35 ; numero linee ( posizione massima)
-12 ;[0]MOV R05
+12 ;[0]MOV R0 1
 0;[1]
-5;[2]
+1;[2]
 20 ; [3] CALL fattoriale
 8;[4]
 1 ; [5] DISPLAY R30
