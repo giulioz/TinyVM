@@ -85,7 +85,7 @@ void alignSP() {
 void unalignSP() { printf("sub rsp, rbx\n"); }
 
 int main(int argc, const char **argv) {
-  FILE *readingFile = fopen("test2.cvm", "r");
+  FILE *readingFile = fopen(argv[1], "r");
   numberType programLineCount = 0;
   numberType *program = readProgram(readingFile, &programLineCount);
 
